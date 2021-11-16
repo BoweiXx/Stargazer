@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Login } from './components/login'
+import { Login } from './components/login';
+import { Admin } from './components/admin';
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.handleLogin = this.handleLogin.bind(this);
+    this.handleAdminLogin = this.handleAdminLogin.bind(this);
+    this.handleUserLogin = this.handleUserLogin.bind(this)
   }
 
   state = {
@@ -48,7 +50,7 @@ class App extends Component {
     this.setState({ responseToPost: body });
   };
 
-  handleLogin = async () => {
+  handleAdminLogin = async () => {
     let username = document.getElementById('username').value;
     let password = document.getElementById('password').value;
     let temp = { username, password };
@@ -60,17 +62,31 @@ class App extends Component {
       body: JSON.stringify(temp)
     })
     let newState = await res.text();
-    if(newState){
+    if (newState === 'true') {
       this.setState({ role: 'Admin' });
+    } else {
+      window.alert('Incorrect Username or Password')
     }
     console.log(this.state)
   }
+
+  handleUserLogin() {
+    this.setState({ role: 'User' });
+    console.log(this.state)
+  }
   render() {
-    return (
-      <div className="App">
-        <Login onClick={this.handleLogin} />
-      </div>
-    );
+    if(this.state.role === null){
+      return (
+        <div className="App">
+          <Login admin={this.handleAdminLogin} user={this.handleUserLogin} />
+        </div>
+      );
+    }else if(this.state.role === 'Admin'){
+      return(<Admin/>)
+    }else if(this.state.role === 'User'){
+      return(<p>User</p>)
+    }
+    
   }
 }
 

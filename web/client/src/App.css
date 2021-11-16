@@ -1,7 +1,96 @@
 .App {
   text-align: center;
+  height: 100vh;
 }
 
-.Header{
-  
+#login-container{
+  position: relative;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  padding: 40px;
+  transform: translate(-50%, +50%);
+  background: rgb(0, 0, 34);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(25, 11, 63, 0.6);
+  border-radius: 10px;
+}
+
+#login-container h2{
+  color: white;
+}
+
+#login-container h6{
+  color: white;
+}
+#login-container button{
+  border: none;
+  width: 200px;
+  height: 30px;
+  margin: 10px;
+  background: none;
+  color: white;
+}
+
+#login-container button:hover{
+  background:rgba(120, 154, 247, 0.74);
+  box-shadow: 0 0 30px rgba(155, 181, 255, 0.74);
+  border-radius: 5px;
+}
+
+#login-container input{
+  border-radius: 10px;
+  border: none;
+  border-bottom: 1px solid white;
+  border-bottom: white;  
+  background: none;
+  padding: 5px;
+  margin: 10px; 
+  color: white;
+}
+
+#login-container input:hover{
+  background: white;
+  box-shadow: 0 0 50px rgba(155, 181, 255, 0.74);
+  color: black;
+}
+
+#login-container ::placeholder{
+  color: white;
+}
+#login-container input:hover ::placeholder{
+  color: black;
+}
+
+#password:after{
+  content: "*";
+}
+
+#admin-container{
+  position: relative;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+  background: rgb(0, 0, 34);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(25, 11, 63, 0.6);
+  border-radius: 10px;
+}
+
+#admin-wrapper{
+  height: 100vh;
+}
+
+#admin-wrapper input{
+  margin: 20px;
+  width: 400px;
+  border-radius: 5px;
+}
+
+#admin-wrapper button{
+  left: 50%;
+  width: 200px;
+  border-radius: 5px;
 }
