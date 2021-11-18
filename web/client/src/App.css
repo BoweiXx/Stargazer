@@ -89,8 +89,18 @@
   border-radius: 5px;
 }
 
-#admin-wrapper button{
+#admin-wrapper #altitude{
   left: 50%;
   width: 200px;
   border-radius: 5px;
+}
+
+#admin-wrapper #azimuth{
+  left: 50%;
+  width: 200px;
+  border-radius: 5px;
+}
+
+#admin-wrapper #bigger-button{
+  width: 400px;
 }

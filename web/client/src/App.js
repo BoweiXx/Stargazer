@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Login } from './components/login';
 import { Admin } from './components/admin';
+import { User } from './components/user';
 import './App.css';
 
 class App extends Component {
@@ -54,7 +55,7 @@ class App extends Component {
     let username = document.getElementById('username').value;
     let password = document.getElementById('password').value;
     let temp = { username, password };
-    const res = await fetch('/system/login', {
+    const res = await fetch('/system/role', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -72,7 +73,6 @@ class App extends Component {
 
   handleUserLogin() {
     this.setState({ role: 'User' });
-    console.log(this.state)
   }
   render() {
     if(this.state.role === null){
@@ -84,7 +84,7 @@ class App extends Component {
     }else if(this.state.role === 'Admin'){
       return(<Admin/>)
     }else if(this.state.role === 'User'){
-      return(<p>User</p>)
+      return(<User/>)
     }
     
   }

@@ -1,7 +1,8 @@
 from astropy import units as u
 from astropy.coordinates import SkyCoord, AltAz
 from astropy.coordinates.earth import EarthLocation 
+from flask import Flask
 import time
-print(SkyCoord.from_name('capella'))    
+print(SkyCoord.from_name('M33'))
 customerLocation = EarthLocation(lat = 10 * u.deg, lon =10 * u.deg, height = 390 * u.m)
 print(customerLocation)
