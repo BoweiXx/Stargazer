@@ -1,15 +1,15 @@
 import React from "react";
-
-export class User extends React.Component{
-    constructor(porps){
+import { Userheader } from "./userheader";
+export class User extends React.Component {
+    constructor(porps) {
         super(porps);
-
+        this.state = {}
     }
 
-    render(){
-        return(
-            <div id = "client-wrapper">
-                
+    render() {
+        return (
+            <div id="client-wrapper">
+                <Userheader />
 
             </div>
         )

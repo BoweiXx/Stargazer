@@ -40,7 +40,7 @@ app.post('/system/role/admin/turntable/azimuth', (req, res)=>{
   let updatedAz = req.body['az'];
   updatedAz = Number(updatedAz);
   if(updatedAz>0 && updatedAz<360){
-    res.send('updateds');
+    res.send('updated');
     console.log('send to pi')
   }else{
     res.send(false);
