@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const {exec} = require('child_process');
 const app = express();
 const port = process.env.PORT || 80;
 let inUse = false;
@@ -60,4 +61,11 @@ app.post('/system/role/admin/turntable/altitude', (req, res)=>{
   }
 })
 
+app.post('/system/role/user/inactive/entity', (req, res)=>{
+  const requestBundle = req.body
+  //request from python
+  exec(`../../python/Scripts/python.exe -c \'from main import getCoord; getCoord(${requestBundle["name"]}, getCoord(${requestBundle["location"]}))\'`)
+
+  
+})
 app.listen(port, () => console.log(`Listening on port ${port}`));
