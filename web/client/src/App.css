@@ -115,7 +115,7 @@
 #user-header-container #user-search-bar{
   border: rgba(120, 154, 247, 0.74);
   margin: 50px; 
-  width: 70%;
+  width: 50%;
   border-radius: 5px;
   border: none;
   position: relative;
@@ -148,4 +148,9 @@
   background:rgba(120, 154, 247, 0.74);
   box-shadow: 0 0 30px rgba(155, 181, 255, 0.74);
   border-radius: 5px;
+}
+
+#user-header-container span{
+  color: white;
+  margin: 10px;
 }

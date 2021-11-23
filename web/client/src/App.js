@@ -19,11 +19,6 @@ class App extends Component {
   };
 
   componentDidMount() {
-    navigator.geolocation.getCurrentPosition((e) => {
-      console.log(e)
-    }, () => {
-      console.log('eeeeer')
-    })
   }
 
   handleSubmit = async e => {

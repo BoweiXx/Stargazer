@@ -1,6 +1,6 @@
 import React from "react";
 
-export class userMain extends React.Component{
+export class UserMain extends React.Component{
     
 
     render(){

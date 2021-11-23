@@ -8,7 +8,6 @@ const port = process.env.PORT || 80;
 let inUse = false;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.post('/system/role', (req, res) => {
   let validation = req.body;
   console.log(req.body)
@@ -31,10 +30,7 @@ app.post('/system/role/user/', (req, res)=>{
 })
 //Following part should be hooked up with the pi, once it is set
 app.get('/system/role/admin/turntablestatus', async(req, res)=>{
-  res.send({
-    azimuth: 180,
-    altitude: 20
-  })
+  
 })
 
 app.post('/system/role/admin/turntable/azimuth', (req, res)=>{
@@ -64,7 +60,18 @@ app.post('/system/role/admin/turntable/altitude', (req, res)=>{
 app.post('/system/role/user/inactive/entity', (req, res)=>{
   const requestBundle = req.body
   //request from python
-  exec(`../../python/Scripts/python.exe -c \'from main import getCoord; getCoord(${requestBundle["name"]}, getCoord(${requestBundle["location"]}))\'`)
+  exec(`c:/Users/BXuuu/Desktop/turntable/python/Scripts/python.exe c:/Users/BXuuu/Desktop/turntable/python/main.py ${requestBundle.name} ${requestBundle.lat} ${requestBundle.long}`, (err, stdout, stderr)=>{
+    if(err){
+      console.log(err);
+      res.send(false);
+    } 
+    if(stdout){
+      inUse = true;
+      //return is a string
+      console.log(stdout)
+      res.send('found');
+    }
+  })
 
   
 })

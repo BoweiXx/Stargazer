@@ -19,8 +19,11 @@ export class Userheader extends React.Component {
     render() {
         return (
             <header id="user-header-container">
-                <image ></image>
                 <input placeholder="What do you want to take pictures of today?" id="user-search-bar" onKeyPress={this.handleKeyPress}></input>
+                <span>From</span>
+                <input type = "time" id = "start-time"></input>
+                <span>To</span>
+                <input type = "time" id = "end-time"></input>
                 <button id="user-search-button" onClick={this.onTrigger} >Search</button>
             </header>
         )
