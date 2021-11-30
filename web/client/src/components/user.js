@@ -1,6 +1,6 @@
 import React from "react";
 import { Userheader } from "./userheader";
-// import { UserMain } from "./userMain";
+import { UserMain } from "./userMain";
 export class User extends React.Component {
     constructor(porps) {
         super(porps);
@@ -43,7 +43,7 @@ export class User extends React.Component {
         return (
             <div id="client-wrapper">
                 <Userheader onClick={this.handleSearchQuery} />
-                {/* <UserMain/> */}
+                <UserMain/>
             </div>
         )
     }

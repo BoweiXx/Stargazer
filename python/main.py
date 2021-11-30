@@ -6,6 +6,7 @@ import time
 from datetime import datetime, timedelta
 import sys
 
+
 def getAzAlt(name, lat, long):
     coord = SkyCoord.from_name(name)
     lat = float(lat)
@@ -18,7 +19,7 @@ def getAzAlt(name, lat, long):
     now = now.replace(microsecond=0)
     currentTime = Time(now) - utcoffset
     transformedCoord = coord.transform_to(AltAz(obstime = currentTime, location = userLocation))
-    print(transformedCoord)
-
+    print(transformedCoord.az, transformedCoord.alt)
+# Pass parameters in terminal, name. lat and long
 getAzAlt(sys.argv[1], sys.argv[2], sys.argv[3]);
 
