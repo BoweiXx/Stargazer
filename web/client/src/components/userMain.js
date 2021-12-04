@@ -32,7 +32,6 @@ export class UserMain extends React.Component {
         return (
             <div id = "user-main">
                 <div id="img-wrapper">
-                    
                 </div>
                 <div id = "des-wrapper">
                 </div>

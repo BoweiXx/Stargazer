@@ -10,10 +10,14 @@ export class User extends React.Component {
         this.handleSearchQuery = this.handleSearchQuery.bind(this);
     }
     handleSearchQuery = (name) => {
+        let startTime = document.getElementById('start-time').value;
+        let endTime = document.getElementById('end-time').value;
         let searchData = {
             lat: null,
             long: null,
-            name: name
+            name: name,
+            startTime: startTime,
+            endTime: endTime
         };
         //this part is async
         navigator.geolocation.getCurrentPosition(async (e) => {
@@ -32,7 +36,9 @@ export class User extends React.Component {
             if (result === 'found') {
                 console.log('requested entity found!');
                 //do something to guide user to the next page for reserving time
-            } else {
+            } else if(result === 'invalid time'){
+                alert('invalid time entered')
+            }else{
                 alert('Invalid search');
             }
         }, () => {
