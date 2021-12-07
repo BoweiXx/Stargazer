@@ -1,7 +1,8 @@
 import socketio;
-
+from motor import motor;
+from picam import picam;
 mySocket = socketio.Client();
-mySocket.connect('http://localhost:80');
+mySocket.connect('https://bx2027.itp.io');
 print('my sid is', mySocket.sid)
 
 
