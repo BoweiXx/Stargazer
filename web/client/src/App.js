@@ -18,10 +18,6 @@ class App extends Component {
     role: null
   };
 
-  componentDidMount() {
-    
-  }
-
   handleSubmit = async e => {
     e.preventDefault();
     const response = await fetch('/api/world', {

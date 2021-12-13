@@ -43,8 +43,8 @@ export class Admin extends React.Component {
     handleGetMotorStatus = async () => {
         const response = await fetch('/system/role/admin/turntablestatus');
         const motorStatus = await response.json();
-        const az = motorStatus.azimuth;
-        const al = motorStatus.altitude;
+        const az = motorStatus['az'];
+        const al = motorStatus['alt'];
         const tempP = document.createElement('p');
         const container = document.getElementById('admin-container');
         container.appendChild(tempP);

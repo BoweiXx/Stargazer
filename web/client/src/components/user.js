@@ -36,9 +36,11 @@ export class User extends React.Component {
             if (result === 'found') {
                 console.log('requested entity found!');
                 //do something to guide user to the next page for reserving time
-            } else if(result === 'invalid time'){
+            } else if (result === 'invalid time') {
                 alert('invalid time entered')
-            }else{
+            } else if (result === 'low angle') {
+                alert('The altitude angle is below 30°, please choose other time');
+            } else {
                 alert('Invalid search');
             }
         }, () => {
@@ -49,7 +51,7 @@ export class User extends React.Component {
         return (
             <div id="client-wrapper">
                 <Userheader onClick={this.handleSearchQuery} />
-                <UserMain/>
+                <UserMain />
             </div>
         )
     }

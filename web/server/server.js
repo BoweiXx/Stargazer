@@ -5,8 +5,13 @@ const fs = require('fs');
 const { exec } = require('child_process');
 const app = express();
 const port = process.env.PORT || 80;
+const util = require('util');
+execPromise = util.promisify(exec);
 let inUse = false;
+const schedule = require('node-schedule');
+const todaySchedule = {};
 require('dotenv').config();
+const scheduleArray = [];
 // let options = {
 // 	key: fs.readFileSync('./star_itp_io.key'),
 // 	cert: fs.readFileSync('./star_itp_io.pem')
@@ -22,7 +27,10 @@ app.get('/', (req, res) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 //Following part should be hooked up with the pi, once it is set
 app.get('/system/role/admin/turntablestatus', async (req, res) => {
-
+  socket.emit('getCurrentPosition', 1);
+  socket.on('currentPos', e => {
+    res.send(e);
+  })
 })
 app.get('/system/role/user/APIKEY', (req, res) => {
   console.log(process.env.NASA_API_KEY);
@@ -31,7 +39,7 @@ app.get('/system/role/user/APIKEY', (req, res) => {
 app.post('/system/role', (req, res) => {
   let validation = req.body;
   console.log(req.body)
-  fs.readFile('./server/users.json', async (err, data) => {
+  fs.readFile('./users.json', async (err, data) => {
     if (err) console.log(err);
     let userList = JSON.parse(data.toString('utf-8'));
     for (let user of userList) {
@@ -44,7 +52,7 @@ app.post('/system/role', (req, res) => {
     }
   })
 })
-
+//if the system is performing, send to client
 app.post('/system/role/user/active', (req, res) => {
 
 })
@@ -78,27 +86,28 @@ app.post('/system/role/user/inactive/entity', async (req, res) => {
   let startTime = requestBundle['startTime'];
   let endTime = requestBundle['endTime'];
   if (validator(startTime, endTime)) {
+    scheduleArray.push(startTime);
     startTime = dateFormatter(startTime);
     endTime = dateFormatter(endTime);
     console.log(startTime)
-    let temp = {};
     // request from python
-    let deltaMinutes = timer(startTime, endTime);
-    for (let i = 0; i < deltaMinutes; i++) {
-      //calculate current time
-      getCurrentTime();
-      exec(`${getPythonExePath()} ${getPythonScriptPath()} ${requestBundle.name} ${requestBundle.lat} ${requestBundle.long} ${startTime}`, (err, stdout, stderr) => {
-        if (err) {
-          console.log(err);
-          res.send(false);
-        }
-        if (stdout) {
-          inUse = true;
-          //return is a string
-          console.log(stdout);
-          let result = stdout.split(' ');
-          let az = result[0];
-          let alt = result[1];
+    exec(`${getPythonExePath()} ${getPythonScriptPath()} ${requestBundle.name} ${requestBundle.lat} ${requestBundle.long} ${startTime} ${endTime}`, (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+        res.send(false);
+      }
+      if (stdout) {
+        //return is a string
+        console.log(stdout);
+        let results = stdout.split('\r\n');
+        results.pop();
+
+        console.log(results);
+        for (let i = 0; i < results.length; i++) {
+          let res = results[i].split(' ');
+          console.log(res);
+          let az = res[0];
+          let alt = res[1];
           // console.log(result);
           let azDay = getDay(az);
           let altDay = getDay(alt);
@@ -108,18 +117,28 @@ app.post('/system/role/user/inactive/entity', async (req, res) => {
             "az": azDay + '.' + azMin,
             "alt": altDay + '.' + altMin
           }
-          socket.emit('location', azAlt)
-          res.send('found');
+          if (Array.isArray(todaySchedule[`${startTime}`])) {
+            todaySchedule[`${startTime}`].push(azAlt);
+            // console.log(todaySchedule)
+          } else {
+            todaySchedule[`${startTime}`] = [azAlt];
+          }
         }
-        if (stderr) {
-          console.log(stderr)
-        }
-      })
-    }
+        res.send('found');
+        fs.writeFile(`./${startTime.split(':')[0]}.json`, JSON.stringify(todaySchedule), (err) => {
+          if (err) console.log(err);
+        });
+        scheduler(startTime.split(':')[0], startTime);
+      }
+      if (stderr) {
+        console.log(stderr)
+      }
+    })
   } else {
     console.log('Time input not valid')
     res.send('invalid time');
   }
+
 })
 httpServer.listen(port, () => console.log(`Listening on port ${port}`));
 socket.on('connection', (msg) => {
@@ -187,6 +206,7 @@ function dateFormatter(time) {
 
 //input as string, validate the start time is ealier than endtime
 function validator(start, end) {
+  const date = new Date();
   const startArray = start.split(':');
   const endArray = end.split(':');
   console.log(startArray, endArray);
@@ -194,22 +214,33 @@ function validator(start, end) {
     return false;
   } else if (startArray[0] === endArray[0] && startArray[1] > endArray[1]) {
     return false;
+  } else if (startArray[0] < date.getHours()) {
+    return false;
+  } else if (startArray[0] === date.getHours() && startArray[1] < date.getMinutes()) {
+    return false;
   }
   return true;
+
 }
 //input time format: HH:MM
+// function timer(start, end) {
+//   let [startHour, startMinute] = start.split(':');
+//   let [endHour, endMinute] = end.split(':');
+//   startHour = Number(startHour);
+//   startMinute = Number(startMinute);
+//   endHour = Number(endHour);
+//   endMinute = Number(endMinute);
+//   const deltaTime = (endHour - startHour - 1) * 60 + (60 - startMinute) + endMinute;
+//   return deltaTime;
+// }
 
-function timer(start, end) {
-  let [startHour, startMinute] = start.split(':');
-  let [endHour, endMinute] = end.split(':');
-  startHour = Number(startHour);
-  startMinute = Number(startMinute);
-  endHour = Number(endHour);
-  endMinute = Number(endMinute);
-  const deltaTime = (endHour - startHour - 1) * 60 + (60 - startMinute) + endMinute;
-  return deltaTime;
-}
-//start passed in as string in format of HH:MM, deltaT is in minutes
-function getCurrentTime(start, deltaT){
-
+function scheduler(name, startTime) {
+  console.log(startTime);
+  console.log('start creating new job!')
+  let newJob = schedule.scheduleJob(startTime, function () {
+    let data = fs.readFileSync(`${name}.json`);
+    socket.emit('updateAzAlt', data);
+    console.log('New Job done!');
+  })
+  console.log(`New Job created as ${util.inspect(newJob)}`)
 }
