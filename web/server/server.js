@@ -222,17 +222,6 @@ function validator(start, end) {
   return true;
 
 }
-//input time format: HH:MM
-// function timer(start, end) {
-//   let [startHour, startMinute] = start.split(':');
-//   let [endHour, endMinute] = end.split(':');
-//   startHour = Number(startHour);
-//   startMinute = Number(startMinute);
-//   endHour = Number(endHour);
-//   endMinute = Number(endMinute);
-//   const deltaTime = (endHour - startHour - 1) * 60 + (60 - startMinute) + endMinute;
-//   return deltaTime;
-// }
 
 function scheduler(name, startTime) {
   console.log(startTime);
@@ -240,7 +229,7 @@ function scheduler(name, startTime) {
   let newJob = schedule.scheduleJob(startTime, function () {
     let data = fs.readFileSync(`${name}.json`);
     socket.emit('updateAzAlt', data);
-    console.log('New Job done!');
+    console.log(`New Job done! at ${new Date().now()}`);
   })
   console.log(`New Job created as ${util.inspect(newJob)}`)
 }
