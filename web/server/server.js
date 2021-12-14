@@ -54,7 +54,9 @@ app.post('/system/role', (req, res) => {
 })
 //if the system is performing, send to client
 app.post('/system/role/user/active', (req, res) => {
-
+  if(inUse){
+    res.send('in use');
+  }
 })
 
 app.post('/system/role/admin/turntable/azimuth', (req, res) => {
